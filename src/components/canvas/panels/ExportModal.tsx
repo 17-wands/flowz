@@ -20,7 +20,7 @@ export function ExportModal() {
   const mode = useFlowzStore((s) => s.exportMode)
   const setMode = useFlowzStore((s) => s.setExportMode)
   const workspace = useFlowzStore((s) => s.workspace)
-  const activeWorkflow = useFlowzStore((s) => s.activeWorkflow)()
+  const activeWorkflow = useFlowzStore((s) => s.activeWorkflow())
 
   const [copied, setCopied] = useState(false)
 

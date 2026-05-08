@@ -23,7 +23,7 @@ const nodeTypes = { stepNode: StepNode }
 const edgeTypes = { animatedEdge: AnimatedEdge }
 
 export function FlowCanvas() {
-  const activeWorkflow = useFlowzStore((s) => s.activeWorkflow)()
+  const activeWorkflow = useFlowzStore((s) => s.activeWorkflow())
   const updateStep = useFlowzStore((s) => s.updateStep)
   const selectNode = useFlowzStore((s) => s.selectNode)
 

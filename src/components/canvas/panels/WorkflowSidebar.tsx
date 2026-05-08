@@ -8,7 +8,7 @@ import { useFlowzStore } from '@/lib/store'
 export function WorkflowSidebar() {
   const workspace = useFlowzStore((s) => s.workspace)
   const activeWorkflowId = useFlowzStore((s) => s.activeWorkflowId)
-  const activeWorkflow = useFlowzStore((s) => s.activeWorkflow)()
+  const activeWorkflow = useFlowzStore((s) => s.activeWorkflow())
   const setActiveWorkflow = useFlowzStore((s) => s.setActiveWorkflow)
   const addWorkflow = useFlowzStore((s) => s.addWorkflow)
   const duplicateWorkflow = useFlowzStore((s) => s.duplicateWorkflow)

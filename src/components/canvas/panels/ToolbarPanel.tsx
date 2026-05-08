@@ -16,7 +16,7 @@ interface ToolbarPanelProps {
 
 export function ToolbarPanel({ onImport }: ToolbarPanelProps) {
   const workspace = useFlowzStore((s) => s.workspace)
-  const activeWorkflow = useFlowzStore((s) => s.activeWorkflow)()
+  const activeWorkflow = useFlowzStore((s) => s.activeWorkflow())
   const setWorkspaceName = useFlowzStore((s) => s.setWorkspaceName)
   const setExportModalOpen = useFlowzStore((s) => s.setExportModalOpen)
   const addStep = useFlowzStore((s) => s.addStep)
