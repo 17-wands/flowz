@@ -1,36 +1,192 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Flowz
 
-## Getting Started
+**A multi-actor contract format for human and AI teams — and the tools to author it.**
 
-First, run the development server:
+Flowz defines `workflow.md`: a structured document that specifies, for each step in a workflow, who is eligible to perform it (`actor: human | agent | either`), what inputs it requires, what outputs it produces, and what enforcement level applies. The typed outputs of one step become the required inputs of the next — making it a contract between workers, not just documentation about them.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+Any worker reading a workflow file — human or AI agent — can immediately identify which steps they are eligible to perform, what must exist before they start, and what they must produce before the next step can begin.
+
+---
+
+## The workflow.md format
+
+A workspace is split into two tiers to keep LLM context lean:
+
+| File | Size | Purpose |
+|------|------|---------|
+| `workflow.md` (root) | ~200 tokens | Manifest/index. Always load first. |
+| `workflows/*.md` | 400–2,000 tokens each | Full detail per workflow. Load only what's relevant. |
+
+Each workflow file contains phases, and each phase contains steps:
+
+```yaml
+- id: research-synthesis
+  name: User Research Synthesis
+  description: Synthesize interviews and analytics into insights.
+  actor: either
+  enforcement: required
+  inputs:
+    - "Interview recordings"
+    - "Analytics exports"
+  outputs:
+    - "Insight brief"
+    - "User journey map"
+  agents:
+    - name: Claude Sonnet
+      model: claude-sonnet-4-6
+      skills: [summarize, extract-themes]
+      harness: claude-code
+  tools:
+    - name: Notion
+      type: saas
+      required: true
+      alternatives: [Confluence, Miro]
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The `actor` field is what distinguishes this from a documentation format. Steps marked `actor: human` must not be executed autonomously by an agent. Steps marked `actor: agent` are fully delegatable. `actor: either` leaves it to the team's discretion.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Full format specification: [`docs/workflow-md.md`](docs/workflow-md.md) or `flowz.app/workflow_md`.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## Three ways to author workflow.md
 
-To learn more about Next.js, take a look at the following resources:
+### 1. Visual canvas (this app)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+The Flowz web app provides a node graph editor for building workflow files. Phases are grouping nodes; steps are cards within them. The right panel edits all fields including `actor`, `enforcement`, inputs, outputs, agents, and tools. Export generates `workflow.md` + `workflows/*.md` directly.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+npm install
+npm run dev
+# → http://localhost:3000
+```
 
-## Deploy on Vercel
+### 2. Claude Code skill
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Install the Flowz skill into any project and build `workflow.md` conversationally:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+npx flowz-skill
+```
+
+This copies the skill into `.agents/skills/flowz/` in your project. Invoke it in a Claude Code session with `/flowz`. The skill interviews you about your team's workflows, infers tools from your repo, and writes the files directly.
+
+See [`skill/README.md`](skill/README.md) for details.
+
+### 3. Write by hand
+
+The format is plain Markdown with YAML code blocks — no tooling required. Use [`docs/workflow-md.md`](docs/workflow-md.md) as the spec and [`skill/examples/`](skill/examples/) as reference output.
+
+---
+
+## Using workflow.md with LLMs
+
+Add this to your project's `CLAUDE.md` or system prompt:
+
+```markdown
+## Workflow context
+
+A `workflow.md` file exists at the project root. It is the manifest for this team's
+product workflow. When starting any work session:
+
+1. Read `workflow.md` to understand what workflow files exist.
+2. Identify which workflow(s) are relevant to the current task based on descriptions and tags.
+3. Read only those workflow files from the `workflows/` directory.
+4. Only perform steps where `actor` is `agent` or `either`. Steps marked `actor: human`
+   require a person and must not be executed autonomously.
+5. Before starting a step, verify its inputs exist. A step's outputs become the required
+   inputs for downstream steps — do not skip producing them.
+6. Follow enforcement levels: complete `required` steps, use judgment on `recommended`,
+   skip `optional` unless specifically helpful.
+7. Prefer the listed tools and agents unless there is a documented reason to deviate.
+```
+
+The manifest's built-in Load Instructions section includes this text automatically in every Flowz export.
+
+---
+
+## Intended uses
+
+- **Document your team's AI-assisted workflows** — capture which steps humans own, which agents can handle, what flows between them
+- **Onboard agents to your process** — drop `workflow.md` into a project root and agents immediately understand the team's process, tool preferences, and handoff boundaries
+- **Enforce actor boundaries** — use `actor: human` to mark steps that must not be delegated (sign-off gates, judgment calls, stakeholder reviews)
+- **Build shared process libraries** — version-control your team's workflow definitions alongside the code they govern
+- **Integrate with multi-agent pipelines** — the typed `inputs`/`outputs` structure maps naturally to agent handoff protocols
+
+---
+
+## Project structure
+
+```
+flowz/
+  src/
+    app/
+      page.tsx              # Landing page
+      canvas/page.tsx       # Visual workflow editor
+      templates/page.tsx    # Starter workspace gallery
+      workflow_md/page.tsx  # Format spec documentation
+    components/canvas/      # React Flow nodes, edges, panels
+    lib/
+      store.ts              # Zustand state (workspace, workflows, phases, steps)
+      export.ts             # Serialize to workflow.md + JSON
+      types.ts              # TypeScript interfaces + token estimation
+      templates/            # Built-in starter workspaces
+  skill/
+    SKILL.md                # Claude Code skill definition
+    README.md               # Skill installation guide
+    bin/install.js          # npx flowz-skill installer
+    examples/               # Sample workflow.md output files
+  docs/
+    workflow-md.md          # Format specification (repo-readable)
+```
+
+---
+
+## Tech stack
+
+- **Next.js 16** (App Router, static export, no backend)
+- **@xyflow/react** — node graph canvas
+- **Framer Motion** — animations
+- **Zustand** — client state with localStorage persistence
+- **js-yaml** — YAML serialization
+- **Tailwind CSS** — utility styling with TechSimple design tokens
+
+All data stays in the browser. No accounts, no API calls, no telemetry.
+
+---
+
+## Development
+
+```bash
+npm install
+npm run dev        # development server → localhost:3000
+npm run build      # production build
+npx tsc --noEmit   # type check
+```
+
+---
+
+## Contributing
+
+Contributions welcome. Areas where help is most useful:
+
+- Additional starter templates (`src/lib/templates/`)
+- Import parsers for other workflow formats
+- Export targets beyond Markdown/JSON
+- Skill improvements (`skill/SKILL.md`)
+
+Please open an issue before starting significant work.
+
+---
+
+## License
+
+Apache 2.0. See [LICENSE](LICENSE).
+
+The `workflow.md` format itself is an open specification — implementations, tooling, and parsers are encouraged without restriction.
+
+---
+
+## Authorship
+
+Built by The Flowz Authors. Contributions are listed in git history.

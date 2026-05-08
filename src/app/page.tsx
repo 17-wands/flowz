@@ -1,65 +1,59 @@
-import Image from "next/image";
+import { Hero } from '@/components/landing/Hero'
+import { FeatureGrid } from '@/components/landing/FeatureGrid'
+import Link from 'next/link'
+import { ArrowRight } from 'lucide-react'
 
-export default function Home() {
+export default function HomePage() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <main className="min-h-screen bg-ink-950">
+      <Hero />
+      <FeatureGrid />
+
+      {/* CTA section */}
+      <section className="py-24 px-4 text-center">
+        <div
+          className="max-w-2xl mx-auto rounded-2xl px-8 py-12"
+          style={{
+            background: 'radial-gradient(circle at 50% 0%, rgba(124,92,255,0.2), rgba(8,9,13,0) 70%)',
+            border: '1px solid rgba(124,92,255,0.25)',
+          }}
+        >
+          <h2
+            className="text-3xl font-semibold tracking-tight mb-4"
+            style={{ color: '#EEF1F7', letterSpacing: '-0.03em' }}
+          >
+            Your team has a workflow.
+            <br />
+            Now you can show it.
+          </h2>
+          <p className="text-slate-300 mb-8 leading-relaxed">
+            Build your workflow in minutes. Export as{' '}
+            <code className="font-mono text-violet-300 text-sm">workflow.md</code> and give every
+            agent on your team the context it needs.
           </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+          <Link
+            href="/canvas"
+            className="inline-flex items-center gap-2 bg-violet-500 text-white rounded-[10px] px-6 py-3 text-sm font-medium hover:brightness-110 transition-all"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+            Open the canvas
+            <ArrowRight size={16} />
+          </Link>
         </div>
-      </main>
-    </div>
-  );
+      </section>
+
+      {/* Footer */}
+      <footer className="border-t border-white/[0.06] py-8 px-4 text-center">
+        <p className="text-xs text-slate-500">
+          Flowz — built for AI-native teams ·{' '}
+          <Link href="/templates" className="text-slate-400 hover:text-mist-100 transition-colors">
+            Templates
+          </Link>
+          {' · '}
+          <Link href="/canvas" className="text-slate-400 hover:text-mist-100 transition-colors">
+            Canvas
+          </Link>
+        </p>
+      </footer>
+    </main>
+  )
 }

@@ -1,0 +1,19 @@
+{
+  "name": "flowz-skill",
+  "version": "0.1.0",
+  "description": "Install the Flowz workflow.md Claude Code skill into your project",
+  "keywords": ["claude-code", "workflow", "llm", "ai", "skill", "flowz"],
+  "license": "MIT",
+  "bin": {
+    "flowz-skill": "./bin/install.js"
+  },
+  "files": [
+    "bin/",
+    "SKILL.md",
+    "README.md",
+    "examples/"
+  ],
+  "engines": {
+    "node": ">=18"
+  }
+}
