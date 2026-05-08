@@ -29,7 +29,7 @@ In a Claude Code session, invoke the skill:
 
 Claude will:
 1. Inspect your project for existing workflow files and tech stack context
-2. Walk you through defining workflows, phases, steps, agents, and tools
+2. Walk you through defining workflows, steps, agents, and tools
 3. Write `workflow.md` (the manifest) and `workflows/*.md` (workflow files) to your project root
 
 ## What gets created
@@ -57,4 +57,4 @@ The skill source lives in `skill/` in the [Flowz repository](https://github.com/
 
 ## License
 
-MIT
+Apache 2.0

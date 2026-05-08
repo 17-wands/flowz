@@ -1,20 +1,22 @@
-# Flowz Workflow Builder Skill
-
-## Purpose
-
-Guide the user through building a `workflow.md` for their project — a structured Markdown document that gives LLMs context about how their team works. The output is a two-tier file set: a lightweight manifest (`workflow.md`) plus focused workflow files in `workflows/`.
-
-This skill can be invoked at any time to create, update, or extend the workflow documentation for a project. It does not require the Flowz visual editor.
-
+---
+name: flowz
+description: Use when creating or updating workflow.md files for a project — when users say "create a workflow.md", "document our workflow", "set up workflow files", "add workflow context", "write our team's workflow", "what's our workflow", or when a project has no workflow.md and needs one. Also use when a user wants to extend, update, or audit existing workflow files.
+license: Apache-2.0
+metadata:
+  author: flowz
+  version: "1.1"
 ---
 
-## When to invoke
+# Flowz Workflow Builder
 
-Invoke `/flowz` when:
-- A project has no `workflow.md` and the user wants to add one
-- The user wants to update or extend an existing `workflow.md`
-- The user wants to document a specific phase or workflow in isolation
-- The user says "document our workflow", "create a workflow file", or similar
+## NEVER Do
+
+- **NEVER use phases** — the format is flat: workspace → workflows → steps. There is no intermediate phase layer. If you produce phase-based output, it will fail to import.
+- **NEVER skip the `actor` field** — every step must declare `actor: human | agent | either`. This is the core contract; omitting it defeats the purpose of the format.
+- **NEVER create a single monolithic `workflow.md`** — always use the two-tier structure: a root manifest plus `workflows/*.md` files. A single file doesn't allow selective loading.
+- **NEVER produce placeholder outputs** — each step's `outputs` must name real artifacts (e.g. `"EDA notebook"`, `"Feature branch"`) that downstream steps can reference as inputs. Vague entries like `"results"` break the contract.
+- **NEVER describe what a step does in `notes`** — `description` carries the what; `notes` carries constraints, gotchas, or reasons a human must own the step.
+- **NEVER overwrite existing workflow files** — read them first and extend, not replace.
 
 ---
 
@@ -22,161 +24,59 @@ Invoke `/flowz` when:
 
 ### Step 1 — Assess existing state
 
-Check whether `workflow.md` or `workflows/` already exist in the project root. If they do, read them before proceeding so you can extend rather than overwrite.
+Read any existing workflow files before proceeding:
 
 ```
 Read: workflow.md (if exists)
 Read: workflows/*.md (if exists)
 ```
 
-### Step 2 — Discover team context
+If files exist, extend rather than replace. Note what workflows are already defined.
 
-Ask the user (or infer from existing files like `README.md`, `CLAUDE.md`, `package.json`, `.github/`, etc.) the following. Do not ask all at once — gather what you can from the codebase first, then ask only what's missing:
+### Step 2 — Discover context
 
-1. **Workspace name** — e.g. "Acme Engineering", "Mobile App Team"
+Infer what you can from the codebase first (README, package.json, .claude/, .cursor/, .github/), then ask only for what's missing:
+
+1. **Workspace name** — e.g. "Acme Engineering"
 2. **Team name** (optional)
-3. **Existing workflows** — what distinct areas of work exist? (e.g. discovery, dev, deployment) Each should become a separate `workflows/*.md` file.
-4. **Tech stack** — what tools, IDEs, and AI models does the team use? (infer from package.json, .cursor/, .claude/ etc.)
+3. **Workflows** — what distinct areas of work exist? Each becomes a separate `workflows/*.md` file.
+   Good starting point: discovery, development, delivery — but tailor to the actual team.
+4. **Tech stack** — tools, IDEs, AI models (infer from project files; confirm before assuming)
+
+Do not ask all at once. Gather what you can, then ask only for gaps.
 
 ### Step 3 — Build each workflow
 
-For each workflow the user identifies, walk through phases interactively:
+For each workflow, walk through steps interactively:
 
 ```
-For each workflow:
-  For each phase:
-    Ask: What are the steps in this phase?
-    For each step:
-      - Name (required)
-      - Description (≤ 200 chars)
-      - Actor (human / agent / either — who is eligible to perform this step?)
-      - Inputs (what artifacts must exist before this step starts?)
-      - Outputs (what artifacts must this step produce for downstream steps?)
-      - Agents (which AI agents / models / skills?)
-      - Tools (SaaS, CLI, IDE, SDK — required vs. optional?)
-      - Enforcement (required / recommended / optional)
+For each step:
+  - Name (required)
+  - Description (≤ 200 chars — what does this step produce or decide?)
+  - Actor: human / agent / either (who is eligible to perform this step?)
+  - Inputs: what artifacts must exist before this step starts?
+  - Outputs: what artifacts must this step produce for downstream steps?
+  - Agents: which AI agents / models / skills?
+  - Tools: SaaS, CLI, IDE, SDK — required vs. optional? Any alternatives?
+  - Enforcement: required / recommended / optional
 ```
 
-**Inference rule:** If the user's tech stack is visible (e.g. Cursor + Claude Code in `.claude/`, Vitest in `package.json`, Vercel in project config), pre-fill tools and agents and ask for confirmation rather than asking from scratch.
+Inference rule: if the tech stack is visible, pre-fill agents and tools and ask for confirmation rather than starting from scratch.
 
-### Step 4 — Write the files
+### Step 4 — Write files
 
-Write files in this order:
+Load [references/format.md](references/format.md) for the exact file format and field limits before writing.
 
-1. Each `workflows/{name}.md` file
-2. The root `workflow.md` manifest (generated from the workflow files)
-
-Use the exact format from the [format spec](../docs/workflow-md.md). Enforce field limits:
-- description ≤ 200 chars
-- notes ≤ 300 chars
-- inputs/outputs ≤ 8 items each, ≤ 80 chars per item
-- tool alternatives ≤ 4
+Write in this order:
+1. Each `workflows/{slug}.md` file
+2. The root `workflow.md` manifest
 
 ### Step 5 — Confirm and summarize
 
 After writing:
-- Show the user the file list created
-- Show the token count for each file (estimate: `ceil(chars / 3.8)`)
-- Suggest adding the load instruction to `CLAUDE.md` (show the snippet)
-- Offer to open the visual editor: `flowz.app/canvas` (import the generated files)
-
----
-
-## Output format
-
-### `workflow.md` (manifest)
-
-```markdown
----
-name: {workspace name}
-version: 1.0.0
-team: {team name}
-exported: {ISO timestamp}
----
-
-# Workflow Manifest: {workspace name}
-
-## Load Instructions
-
-This file is the workspace index. When starting a session, read this manifest first.
-Load only the workflow files relevant to your current task.
-Match your task to the workflow descriptions and tags below.
-
-```yaml
-workspace:
-  name: {workspace name}
-  version: 1.0.0
-  workflows:
-    - id: {id}
-      name: {name}
-      file: workflows/{slug}.md
-      description: {one line}
-      tags: [{tag1}, {tag2}]
-      tokens: {estimate}
-``
-
-## Workflow Index
-
-- **[{name}](workflows/{slug}.md)** — {description} *(≈{tokens} tokens)*
-```
-
-### `workflows/{slug}.md` (workflow file)
-
-```markdown
----
-name: {workflow name}
-version: 1.0.0
-description: {description}
-tags: [{tags}]
-exported: {ISO timestamp}
----
-
-# Workflow: {workflow name}
-
-{one paragraph description}
-See `workflow.md` in the project root for the full workspace manifest.
-
-## Conventions
-
-- `actor: human` — must be performed by a person
-- `actor: agent` — can be fully delegated to an AI agent
-- `actor: either` — human or agent, at the team's discretion
-- `enforcement: required` — this step must be completed before proceeding
-- `enforcement: recommended` — skip only with documented justification
-- `enforcement: optional` — use at team discretion
-- `alternatives` — acceptable substitutes when the primary tool is unavailable
-
----
-
-## Phase: {phase name}
-
-{phase description}
-
-```yaml
-phase:
-  id: {phase-id}
-  name: {phase name}
-  steps:
-    - id: {step-id}
-      name: {step name}
-      description: {description}
-      inputs: [...]
-      outputs: [...]
-      agents:
-        - name: {agent name}
-          model: {model id}
-          skills: [...]
-          harness: {harness}
-      tools:
-        - name: {tool name}
-          type: {tool type}
-          required: {true|false}
-          alternatives: [...]
-      actor: {human|agent|either}
-      enforcement: {required|recommended|optional}
-      notes: {optional}
-``
-```
+- List files created with their token estimates (`ceil(chars / 3.8)`)
+- Suggest adding the CLAUDE.md snippet below to the project's `CLAUDE.md`
+- Offer to open the visual editor: `flowz.app/canvas` (supports import of generated files)
 
 ---
 

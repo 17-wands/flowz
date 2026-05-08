@@ -53,7 +53,7 @@ export default function TemplatesPage() {
             {TEMPLATES.map((template, i) => {
               const totalWorkflows = template.workspace.workflows.length
               const totalSteps = template.workspace.workflows.reduce(
-                (s, wf) => s + wf.phases.reduce((sp, p) => sp + p.steps.length, 0), 0
+                (s, wf) => s + wf.steps.length, 0
               )
               const totalTokens = template.workspace.workflows.reduce(
                 (s, wf) => s + estimateTokens(wf), 0

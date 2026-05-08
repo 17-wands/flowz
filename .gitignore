@@ -42,3 +42,12 @@ next-env.d.ts
 
 # Claude Code local session data (plans, memory, project-specific context)
 .claude/
+
+# Installed skills (reproducible from skills-lock.json via `npx skills experimental_install`)
+# Use /* not / so negation rules for manually-maintained skills can work
+.agents/*
+!.agents/skills/
+.agents/skills/*
+!.agents/skills/handoff/
+.agents/skills/handoff/*
+!.agents/skills/handoff/SKILL.md

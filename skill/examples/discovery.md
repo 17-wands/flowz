@@ -24,14 +24,12 @@ See `workflow.md` in the project root for the full workspace manifest.
 
 ---
 
-## Phase: Discovery
-
-Synthesize user research into actionable product insights.
+## Steps
 
 ```yaml
-phase:
-  id: discovery
-  name: Discovery
+workflow:
+  id: discovery-requirements
+  name: Discovery & Requirements
   steps:
     - id: research-synthesis
       name: User Research Synthesis
@@ -77,19 +75,7 @@ phase:
           alternatives: [Sketch, Penpot]
       actor: human
       enforcement: recommended
-```
 
----
-
-## Phase: Requirements
-
-Draft product requirements with AI assistance.
-
-```yaml
-phase:
-  id: requirements
-  name: Requirements
-  steps:
     - id: prd-drafting
       name: PRD Drafting
       description: Draft product requirements document with Claude assistance.
