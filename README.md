@@ -45,7 +45,7 @@ Each workflow file contains phases, and each phase contains steps:
 
 The `actor` field is what distinguishes this from a documentation format. Steps marked `actor: human` must not be executed autonomously by an agent. Steps marked `actor: agent` are fully delegatable. `actor: either` leaves it to the team's discretion.
 
-Full format specification: [`docs/workflow-md.md`](docs/workflow-md.md) or `flowz.vercel.app/workflow_md`.
+Full format specification: [`docs/workflow-md.md`](docs/workflow-md.md) or `lets-flowz.vercel.app/workflow_md`.
 
 ---
 

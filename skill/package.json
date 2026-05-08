@@ -1,6 +1,6 @@
 {
   "name": "flowz-skill",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Install the Flowz workflow.md Claude Code skill into your project",
   "keywords": [
     "claude-code",
@@ -17,7 +17,7 @@
     "url": "git+https://github.com/17-wands/flowz.git",
     "directory": "skill"
   },
-  "homepage": "https://flowz.vercel.app",
+  "homepage": "https://lets-flowz.vercel.app",
   "bin": {
     "flowz-skill": "bin/install.js"
   },

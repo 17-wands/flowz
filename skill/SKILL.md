@@ -76,7 +76,7 @@ Write in this order:
 After writing:
 - List files created with their token estimates (`ceil(chars / 3.8)`)
 - Suggest adding the CLAUDE.md snippet below to the project's `CLAUDE.md`
-- Offer to open the visual editor: `flowz.vercel.app/canvas` (supports import of generated files)
+- Offer to open the visual editor: `lets-flowz.vercel.app/canvas` (supports import of generated files)
 
 ---
 
