@@ -1,17 +1,33 @@
 {
   "name": "flowz-skill",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Install the Flowz workflow.md Claude Code skill into your project",
-  "keywords": ["claude-code", "workflow", "llm", "ai", "skill", "flowz"],
-  "license": "MIT",
+  "keywords": [
+    "claude-code",
+    "workflow",
+    "llm",
+    "ai",
+    "skill",
+    "flowz",
+    "workflow.md"
+  ],
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/17-wands/flowz.git",
+    "directory": "skill"
+  },
+  "homepage": "https://flowz.app",
   "bin": {
-    "flowz-skill": "./bin/install.js"
+    "flowz-skill": "bin/install.js"
   },
   "files": [
     "bin/",
     "SKILL.md",
     "README.md",
-    "examples/"
+    "CHANGELOG.md",
+    "examples/",
+    "references/"
   ],
   "engines": {
     "node": ">=18"
