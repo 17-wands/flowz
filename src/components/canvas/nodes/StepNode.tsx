@@ -23,6 +23,49 @@ const TYPE_ICONS = {
   'local-config': Terminal,
 }
 
+const MAX_VISIBLE = 3
+
+function IOColumn({
+  items,
+  label,
+  color,
+  align,
+}: {
+  items: string[]
+  label: string
+  color: string
+  align: 'left' | 'right'
+}) {
+  const visible = items.slice(0, MAX_VISIBLE)
+  const overflow = items.length - MAX_VISIBLE
+  return (
+    <div className={`flex-1 min-w-0 flex flex-col gap-0.5 ${align === 'right' ? 'items-end' : 'items-start'}`}>
+      <span className="text-[9px] font-semibold uppercase tracking-widest mb-0.5" style={{ color: `${color}99` }}>
+        {label}
+      </span>
+      {visible.map((item, i) => (
+        <span
+          key={i}
+          className={`text-[10px] px-1.5 py-0.5 rounded-md truncate max-w-full font-mono leading-tight ${align === 'right' ? 'text-right' : 'text-left'}`}
+          style={{
+            background: `${color}14`,
+            color: `${color}CC`,
+            border: `1px solid ${color}25`,
+            maxWidth: '100%',
+            display: 'block',
+          }}
+          title={item}
+        >
+          {item}
+        </span>
+      ))}
+      {overflow > 0 && (
+        <span className="text-[9px] text-slate-600">+{overflow} more</span>
+      )}
+    </div>
+  )
+}
+
 export const StepNode = memo(({ data, id, selected }: NodeProps) => {
   const step = (data as { step: WorkflowStep }).step
   const selectNode = useFlowzStore((s) => s.selectNode)
@@ -30,6 +73,7 @@ export const StepNode = memo(({ data, id, selected }: NodeProps) => {
   const Icon = TYPE_ICONS[step.type]
   const actor = ACTOR_META[step.actor ?? 'either']
   const ActorIcon = actor.icon
+  const hasIO = step.inputs.length > 0 || step.outputs.length > 0
 
   return (
     <motion.div
@@ -38,7 +82,7 @@ export const StepNode = memo(({ data, id, selected }: NodeProps) => {
       transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
       onClick={() => selectNode(id)}
       className="cursor-pointer select-none"
-      style={{ width: 220 }}
+      style={{ width: 256 }}
       whileHover={{ scale: 1.02, transition: { duration: 0.12 } }}
     >
       <div
@@ -69,7 +113,7 @@ export const StepNode = memo(({ data, id, selected }: NodeProps) => {
           >
             <ActorIcon size={11} style={{ color: actor.color }} />
           </div>
-          <div className="flex-1 min-w-0">
+          <div className="flex-1 min-w-0 pr-6">
             <div className="text-xs font-semibold leading-tight text-mist-100 truncate">{step.name}</div>
             {step.description && (
               <div className="text-[11px] text-slate-500 mt-0.5 line-clamp-2 leading-relaxed">
@@ -78,6 +122,21 @@ export const StepNode = memo(({ data, id, selected }: NodeProps) => {
             )}
           </div>
         </div>
+
+        {/* Inputs / Outputs chain */}
+        {hasIO && (
+          <div className="mt-2 mb-3 flex gap-2">
+            {step.inputs.length > 0 && (
+              <IOColumn items={step.inputs} label="in" color="#22D3EE" align="left" />
+            )}
+            {step.inputs.length > 0 && step.outputs.length > 0 && (
+              <div className="w-px self-stretch" style={{ background: 'rgba(255,255,255,0.06)' }} />
+            )}
+            {step.outputs.length > 0 && (
+              <IOColumn items={step.outputs} label="out" color="#A78BFA" align="right" />
+            )}
+          </div>
+        )}
 
         {/* Enforcement badge */}
         <div className="flex items-center gap-1.5 flex-wrap">
@@ -89,18 +148,6 @@ export const StepNode = memo(({ data, id, selected }: NodeProps) => {
             <Badge label={`${step.tools.length} tool${step.tools.length > 1 ? 's' : ''}`} color="#3B82F6" />
           )}
         </div>
-
-        {/* Inputs/outputs summary */}
-        {(step.inputs.length > 0 || step.outputs.length > 0) && (
-          <div className="mt-3 pt-3 border-t border-white/[0.06] flex gap-3 text-[10px] text-slate-500">
-            {step.inputs.length > 0 && (
-              <span>{step.inputs.length} input{step.inputs.length > 1 ? 's' : ''}</span>
-            )}
-            {step.outputs.length > 0 && (
-              <span>{step.outputs.length} output{step.outputs.length > 1 ? 's' : ''}</span>
-            )}
-          </div>
-        )}
       </div>
 
       <Handle
