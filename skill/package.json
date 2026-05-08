@@ -1,6 +1,6 @@
 {
   "name": "flowz-skill",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Install the Flowz workflow.md Claude Code skill into your project",
   "keywords": [
     "claude-code",
