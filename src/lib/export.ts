@@ -1,5 +1,5 @@
 import yaml from 'js-yaml'
-import type { Workspace, Workflow, WorkflowStep, WorkflowMeta } from './types'
+import type { Workspace, Workflow, WorkflowStep, WorkflowMeta, ToolRef } from './types'
 import { tokenCountFromString } from './types'
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -227,73 +227,146 @@ function uid() {
   return Math.random().toString(36).slice(2)
 }
 
+function normalize(content: string): string {
+  return content.replace(/\r\n/g, '\n').replace(/\r/g, '\n')
+}
+
+function parseFrontmatter(content: string): Record<string, string> {
+  const meta: Record<string, string> = {}
+  const match = content.match(/^---\n([\s\S]*?)\n---/)
+  if (!match) return meta
+  match[1].split('\n').forEach((line) => {
+    const [k, ...v] = line.split(': ')
+    if (k?.trim()) meta[k.trim()] = v.join(': ').trim()
+  })
+  return meta
+}
+
+function parseSteps(rawSteps: Array<Record<string, unknown>>): WorkflowStep[] {
+  const VALID_TYPES = ['step', 'agent', 'tool', 'decision', 'local-config']
+  const VALID_ACTORS = ['human', 'agent', 'either']
+  const VALID_ENFORCEMENT = ['required', 'recommended', 'optional']
+
+  return rawSteps.map((s, i) => ({
+    id: String(s.id || uid()),
+    type: (VALID_TYPES.includes(s.type as string) ? s.type : 'step') as WorkflowStep['type'],
+    name: String(s.name || ''),
+    description: String(s.description || ''),
+    inputs: Array.isArray(s.inputs) ? (s.inputs as string[]) : [],
+    outputs: Array.isArray(s.outputs) ? (s.outputs as string[]) : [],
+    agents: (Array.isArray(s.agents) ? s.agents : []).map((a: Record<string, unknown>) => ({
+      id: uid(),
+      name: String(a.name || ''),
+      model: String(a.model || ''),
+      skills: Array.isArray(a.skills) ? (a.skills as string[]) : [],
+      harness: String(a.harness || ''),
+    })),
+    tools: (Array.isArray(s.tools) ? s.tools : []).map((t: Record<string, unknown>) => ({
+      id: uid(),
+      name: String(t.name || ''),
+      type: (t.type as ToolRef['type']) || 'saas',
+      required: Boolean(t.required),
+      alternatives: Array.isArray(t.alternatives) ? (t.alternatives as string[]) : [],
+    })),
+    actor: (VALID_ACTORS.includes(s.actor as string) ? s.actor : 'either') as 'human' | 'agent' | 'either',
+    enforcement: (VALID_ENFORCEMENT.includes(s.enforcement as string) ? s.enforcement : 'optional') as 'required' | 'recommended' | 'optional',
+    notes: String(s.notes || ''),
+    position: { x: (i % 3) * 280, y: Math.floor(i / 3) * 180 },
+  }))
+}
+
 export function importWorkflowMarkdown(content: string): Workflow | null {
   try {
-    const fmMatch = content.match(/^---\n([\s\S]*?)\n---/)
-    const meta: Record<string, string> = {}
-    if (fmMatch) {
-      fmMatch[1].split('\n').forEach((line) => {
-        const [k, ...v] = line.split(': ')
-        if (k) meta[k.trim()] = v.join(': ').trim()
-      })
-    }
-
-    const yamlBlocks = [...content.matchAll(/```yaml\n([\s\S]*?)```/g)]
-    let steps: WorkflowStep[] = []
+    const text = normalize(content)
+    const meta = parseFrontmatter(text)
+    const yamlBlocks = [...text.matchAll(/^```yaml\n([\s\S]*?)\n^```/gm)]
 
     for (const match of yamlBlocks) {
-      const parsed = yaml.load(match[1]) as { workflow?: { steps?: unknown[] } }
+      const parsed = yaml.load(match[1]) as { workflow?: { id?: string; steps?: unknown[] } }
       const rawSteps = parsed?.workflow?.steps
       if (!Array.isArray(rawSteps)) continue
-
-      steps = (rawSteps as Array<Record<string, unknown>>).map((s, i) => ({
-        id: String(s.id || uid()),
-        type: 'step' as const,
-        name: String(s.name || ''),
-        description: String(s.description || ''),
-        inputs: (s.inputs as string[]) || [],
-        outputs: (s.outputs as string[]) || [],
-        agents: ((s.agents as Array<Record<string, unknown>>) || []).map((a) => ({
-          id: uid(),
-          name: String(a.name || ''),
-          model: String(a.model || ''),
-          skills: (a.skills as string[]) || [],
-          harness: String(a.harness || ''),
-        })),
-        tools: ((s.tools as Array<Record<string, unknown>>) || []).map((t) => ({
-          id: uid(),
-          name: String(t.name || ''),
-          type: (t.type as 'saas') || 'saas',
-          required: Boolean(t.required),
-          alternatives: (t.alternatives as string[]) || [],
-        })),
-        actor: (['human', 'agent', 'either'].includes(s.actor as string) ? s.actor : 'either') as 'human' | 'agent' | 'either',
-        enforcement: (s.enforcement as 'required') || 'optional',
-        notes: String(s.notes || ''),
-        position: { x: (i % 3) * 280, y: Math.floor(i / 3) * 180 },
-      }))
-      break // use the first workflow block found
+      return {
+        id: parsed.workflow?.id || uid(),
+        name: meta.name || 'Imported Workflow',
+        version: meta.version || '1.0.0',
+        team: meta.team || '',
+        description: meta.description || '',
+        tags: meta.tags ? meta.tags.replace(/[\[\]]/g, '').split(',').map((t) => t.trim()).filter(Boolean) : [],
+        dependsOn: [],
+        steps: parseSteps(rawSteps as Array<Record<string, unknown>>),
+      }
     }
-
-    return {
-      id: uid(),
-      name: meta.name || 'Imported Workflow',
-      version: meta.version || '1.0.0',
-      team: meta.team || '',
-      description: meta.description || '',
-      tags: [],
-      dependsOn: [],
-      steps,
-    }
+    return null
   } catch {
     return null
   }
 }
 
-export function importJson(content: string): Workspace | null {
+export interface ParsedFile {
+  filename: string
+  type: 'workflow' | 'manifest' | 'unknown'
+  workflow?: Workflow
+  workspaceMeta?: { name: string; description: string; team: string; version: string }
+}
+
+export function parseMarkdownFile(filename: string, content: string): ParsedFile {
   try {
-    return JSON.parse(content) as Workspace
-  } catch {
-    return null
+    const text = normalize(content)
+    const meta = parseFrontmatter(text)
+    const yamlBlocks = [...text.matchAll(/^```yaml\n([\s\S]*?)\n^```/gm)]
+
+    for (const match of yamlBlocks) {
+      const parsed = yaml.load(match[1]) as Record<string, unknown>
+
+      if (parsed?.workspace) {
+        return {
+          filename,
+          type: 'manifest',
+          workspaceMeta: {
+            name: meta.name || 'Imported Workspace',
+            description: meta.description || '',
+            team: meta.team || '',
+            version: meta.version || '1.0.0',
+          },
+        }
+      }
+
+      if (parsed?.workflow) {
+        const wf = parsed.workflow as { id?: string; steps?: unknown[] }
+        const rawSteps = Array.isArray(wf.steps) ? wf.steps : []
+        return {
+          filename,
+          type: 'workflow',
+          workflow: {
+            id: wf.id || uid(),
+            name: meta.name || filename.replace(/\.md$/, ''),
+            version: meta.version || '1.0.0',
+            team: meta.team || '',
+            description: meta.description || '',
+            tags: meta.tags ? meta.tags.replace(/[\[\]]/g, '').split(',').map((t) => t.trim()).filter(Boolean) : [],
+            dependsOn: [],
+            steps: parseSteps(rawSteps as Array<Record<string, unknown>>),
+          },
+        }
+      }
+    }
+  } catch { /* fall through */ }
+
+  return { filename, type: 'unknown' }
+}
+
+export function importWorkspaceFromFiles(files: ParsedFile[]): Workspace | null {
+  const manifest = files.find((f) => f.type === 'manifest')
+  const workflows = files.filter((f) => f.type === 'workflow' && f.workflow).map((f) => f.workflow!)
+
+  if (workflows.length === 0) return null
+
+  return {
+    id: uid(),
+    name: manifest?.workspaceMeta?.name || 'Imported Workspace',
+    description: manifest?.workspaceMeta?.description || '',
+    team: manifest?.workspaceMeta?.team || '',
+    version: manifest?.workspaceMeta?.version || '1.0.0',
+    workflows,
   }
 }
