@@ -45,15 +45,15 @@ your-project/
 
 ## Format spec
 
-See [`../docs/workflow-md.md`](../docs/workflow-md.md) or [flowz.app/workflow_md](https://flowz.app/workflow_md) for the full format specification, field reference, and token budget methodology.
+See [`../docs/workflow-md.md`](../docs/workflow-md.md) or [flowz.vercel.app/workflow_md](https://flowz.vercel.app/workflow_md) for the full format specification, field reference, and token budget methodology.
 
 ## Visual editor
 
-To edit workflows visually, open [flowz.app/canvas](https://flowz.app/canvas) and import your `workflow.md` or the workspace `.json` file.
+To edit workflows visually, open [flowz.vercel.app/canvas](https://flowz.vercel.app/canvas) and import your `workflow.md` or the workspace `.json` file.
 
 ## Contributing
 
-The skill source lives in `skill/` in the [Flowz repository](https://github.com/flowz-app/flowz). PRs welcome.
+The skill source lives in `skill/` in the [Flowz repository](https://github.com/17-wands/flowz). PRs welcome.
 
 ## License
 

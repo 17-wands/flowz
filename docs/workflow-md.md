@@ -220,6 +220,6 @@ See [`skill/README.md`](../skill/README.md) for details.
 
 ## See also
 
-- [Flowz canvas](https://flowz.app/canvas) — visual editor for workflow.md
-- [Templates](https://flowz.app/templates) — starter workspaces
+- [Flowz canvas](https://flowz.vercel.app/canvas) — visual editor for workflow.md
+- [Templates](https://flowz.vercel.app/templates) — starter workspaces
 - [skill/SKILL.md](../skill/SKILL.md) — the Claude Code skill definition

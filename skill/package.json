@@ -17,7 +17,7 @@
     "url": "git+https://github.com/17-wands/flowz.git",
     "directory": "skill"
   },
-  "homepage": "https://flowz.app",
+  "homepage": "https://flowz.vercel.app",
   "bin": {
     "flowz-skill": "bin/install.js"
   },

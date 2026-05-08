@@ -57,7 +57,7 @@ export default function WorkflowMdPage() {
         <span className="text-sm text-slate-300 font-medium">workflow.md format spec</span>
         <div className="flex-1" />
         <a
-          href="https://github.com/flowz-app/flowz/blob/main/docs/workflow-md.md"
+          href="https://github.com/17-wands/flowz/blob/main/docs/workflow-md.md"
           target="_blank"
           rel="noopener noreferrer"
           className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-mist-100 transition-colors"
