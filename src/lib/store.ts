@@ -210,6 +210,11 @@ export const useFlowzStore = create<FlowzState>()(
     }),
     {
       name: 'flowz-workspace',
+      version: 2,
+      migrate: () => {
+        // v1 had phases; v2 is flat workspace→workflows→steps. Drop stale data.
+        return { workspace: emptyWorkspace(), activeWorkflowId: '' }
+      },
       partialize: (state) => ({
         workspace: state.workspace,
         activeWorkflowId: state.activeWorkflowId,
