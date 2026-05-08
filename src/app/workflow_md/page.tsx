@@ -202,7 +202,7 @@ workspace:
           </Section>
 
           <Section id="workflow-file" title="Workflow file format (workflows/*.md)">
-            <p>Each workflow file follows the same pattern: YAML frontmatter, a prose introduction, a conventions section, and then one YAML code block per phase:</p>
+            <p>Each workflow file follows the same pattern: YAML frontmatter, a prose introduction, a conventions section, and a single <InlineCode>## Steps</InlineCode> YAML block containing all steps for that workflow:</p>
             <Code>{`---
 name: Discovery & Requirements
 version: 1.0.0
@@ -229,14 +229,12 @@ See \`workflow.md\` in the project root for the full workspace manifest.
 
 ---
 
-## Phase: Discovery
-
-Synthesize user interviews and analytics into product insights.
+## Steps
 
 \`\`\`yaml
-phase:
-  id: discovery
-  name: Discovery
+workflow:
+  id: discovery-requirements
+  name: Discovery & Requirements
   steps:
     - id: research-synthesis
       name: User Research Synthesis
@@ -262,25 +260,12 @@ phase:
           required: false
       actor: either
       enforcement: required
-\`\`\`
-
----
-
-## Phase: Requirements
-
-Draft and review the PRD with AI assistance.
-
-\`\`\`yaml
-phase:
-  id: requirements
-  name: Requirements
-  steps:
     - id: prd-drafting
       name: PRD Drafting
       description: Draft product requirements with Claude assistance.
       inputs:
-        - "Opportunity brief"
-        - "Design spec"
+        - "Insight brief"
+        - "User journey map"
       outputs:
         - "PRD"
         - "Acceptance criteria"
@@ -298,6 +283,9 @@ phase:
       enforcement: required
 \`\`\``}
             </Code>
+            <Note>
+              Steps are flat — there is no phase grouping layer. The outputs of one step (e.g. <InlineCode>Insight brief</InlineCode>) become the inputs of the next, forming the chain.
+            </Note>
           </Section>
 
           <Section id="fields" title="Field reference">
@@ -417,7 +405,7 @@ npx flowz-skill
 /flowz`}
             </Code>
             <p className="text-sm">
-              The skill guides you through defining your workflow phases, steps, agents, and tools via a structured conversation, then writes the resulting <InlineCode>workflow.md</InlineCode> (and <InlineCode>workflows/</InlineCode> files) directly to your project.
+              The skill guides you through defining your workflows, steps, agents, and tools via a structured conversation, then writes the resulting <InlineCode>workflow.md</InlineCode> (and <InlineCode>workflows/</InlineCode> files) directly to your project.
             </p>
             <p className="text-sm">
               The skill is part of the Flowz repository. See <InlineCode>skill/README.md</InlineCode> for source and contribution details.
