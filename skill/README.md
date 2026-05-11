@@ -1,6 +1,6 @@
 # flowz-skill
 
-A Claude Code skill that guides you through building a `workflow.md` for your project — conversationally, without the visual editor.
+A Claude Code skill that guides you through building a `WORKFLOW.md` for your project — conversationally, without the visual editor.
 
 ## Install
 
@@ -29,14 +29,14 @@ In a Claude Code session, invoke the skill:
 
 Claude will:
 1. Inspect your project for existing workflow files and tech stack context
-2. Walk you through defining workflows, steps, agents, and tools
-3. Write `workflow.md` (the manifest) and `workflows/*.md` (workflow files) to your project root
+2. Walk you through defining workflows, steps, AI, and tools
+3. Write `WORKFLOW.md` (the manifest) and `workflows/*.md` (workflow files) to your project root
 
 ## What gets created
 
 ```
 your-project/
-  workflow.md              ← manifest index (~200 tokens)
+  WORKFLOW.md              ← manifest index (~200 tokens)
   workflows/
     discovery.md           ← one file per workflow
     development.md
@@ -49,7 +49,7 @@ See [`../docs/workflow-md.md`](../docs/workflow-md.md) or [lets-flowz.vercel.app
 
 ## Visual editor
 
-To edit workflows visually, open [lets-flowz.vercel.app/canvas](https://lets-flowz.vercel.app/canvas) and import your `workflow.md` or the workspace `.json` file.
+To edit workflows visually, open [lets-flowz.vercel.app/canvas](https://lets-flowz.vercel.app/canvas) and import your `WORKFLOW.md` or the workspace `.json` file.
 
 ## Contributing
 

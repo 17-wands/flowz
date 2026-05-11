@@ -1,6 +1,6 @@
 ---
 name: flowz
-description: Use when creating or updating workflow.md files for a project — when users say "create a workflow.md", "document our workflow", "set up workflow files", "add workflow context", "write our team's workflow", "what's our workflow", or when a project has no workflow.md and needs one. Also use when a user wants to extend, update, or audit existing workflow files.
+description: Use when creating or updating WORKFLOW.md files for a project — when users say "create a WORKFLOW.md", "document our workflow", "set up workflow files", "add workflow context", "write our team's workflow", "what's our workflow", or when a project has no WORKFLOW.md and needs one. Also use when a user wants to extend, update, or audit existing workflow files.
 license: Apache-2.0
 metadata:
   author: flowz
@@ -13,7 +13,7 @@ metadata:
 
 - **NEVER use phases** — the format is flat: workspace → workflows → steps. There is no intermediate phase layer. If you produce phase-based output, it will fail to import.
 - **NEVER skip the `actor` field** — every step must declare `actor: human | agent | either`. This is the core contract; omitting it defeats the purpose of the format.
-- **NEVER create a single monolithic `workflow.md`** — always use the two-tier structure: a root manifest plus `workflows/*.md` files. A single file doesn't allow selective loading.
+- **NEVER create a single monolithic `WORKFLOW.md`** — always use the two-tier structure: a root manifest plus `workflows/*.md` files. A single file doesn't allow selective loading.
 - **NEVER produce placeholder outputs** — each step's `outputs` must name real artifacts (e.g. `"EDA notebook"`, `"Feature branch"`) that downstream steps can reference as inputs. Vague entries like `"results"` break the contract.
 - **NEVER describe what a step does in `notes`** — `description` carries the what; `notes` carries constraints, gotchas, or reasons a human must own the step.
 - **NEVER overwrite existing workflow files** — read them first and extend, not replace.
@@ -27,7 +27,7 @@ metadata:
 Read any existing workflow files before proceeding:
 
 ```
-Read: workflow.md (if exists)
+Read: WORKFLOW.md (if exists)
 Read: workflows/*.md (if exists)
 ```
 
@@ -69,7 +69,7 @@ Load [references/format.md](references/format.md) for the exact file format and 
 
 Write in this order:
 1. Each `workflows/{slug}.md` file
-2. The root `workflow.md` manifest
+2. The root `WORKFLOW.md` manifest
 
 ### Step 5 — Confirm and summarize
 
@@ -85,10 +85,10 @@ After writing:
 ```markdown
 ## Workflow context
 
-A `workflow.md` file exists at the project root. It is the manifest for this team's
+A `WORKFLOW.md` file exists at the project root. It is the manifest for this team's
 product workflow. When starting any work session:
 
-1. Read `workflow.md` to understand what workflow files exist.
+1. Read `WORKFLOW.md` to understand what workflow files exist.
 2. Identify which workflow(s) are relevant to the current task based on descriptions and tags.
 3. Read only those workflow files from the `workflows/` directory.
 4. Only perform steps where `actor` is `agent` or `either`. Steps marked `actor: human`
@@ -97,7 +97,7 @@ product workflow. When starting any work session:
    inputs for downstream steps — do not skip producing them.
 6. Follow enforcement levels: complete `required` steps, use judgment on `recommended`,
    skip `optional` unless specifically helpful.
-7. Prefer the listed tools and agents unless there is a documented reason to deviate.
+7. Prefer the listed `ai:` and `tools:` entries unless there is a documented reason to deviate.
 ```
 
 ---

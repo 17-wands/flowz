@@ -215,7 +215,7 @@ exported: 2026-05-08T10:00:00Z
 # Workflow: Discovery & Requirements
 
 This workflow covers user research through PRD sign-off.
-See \`workflow.md\` in the project root for the full workspace manifest.
+See \`WORKFLOW.md\` in the project root for the full workspace manifest.
 
 ## Conventions
 
@@ -346,7 +346,7 @@ workflow:
                   {[
                     ['English prose (description fields)', '3.9–4.1', 'Slightly above average due to technical terms'],
                     ['YAML keys and structure', '3.3–3.6', 'Shorter tokens from punctuation and indentation'],
-                    ['Mixed YAML + English (workflow.md)', '3.7–3.9', 'Midpoint — we use 3.8'],
+                    ['Mixed YAML + English (WORKFLOW.md)', '3.7–3.9', 'Midpoint — we use 3.8'],
                     ['Code / model IDs', '3.0–3.5', 'Subword tokenization of identifiers'],
                   ].map(([type, ratio, note]) => (
                     <tr key={type as string} className="border-b border-white/[0.04]">

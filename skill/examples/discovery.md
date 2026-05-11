@@ -10,7 +10,7 @@ exported: 2026-05-08T10:00:00Z
 
 This workflow covers user research synthesis through PRD sign-off.
 Load this file when working on discovery tasks, design decisions, or requirements writing.
-See `workflow.md` in the project root for the full workspace manifest.
+See `WORKFLOW.md` in the project root for the full workspace manifest.
 
 ## Conventions
 

@@ -42,10 +42,10 @@ function main() {
   Invoke in Claude Code:
     /flowz
 
-  Claude will guide you through building workflow.md for this project.
+  Claude will guide you through building WORKFLOW.md for this project.
 
   Format spec:
-    https://flowz.app/workflow_md
+    https://lets-flowz.vercel.app/workflow_md
 `)
 }
 

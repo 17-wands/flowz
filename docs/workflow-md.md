@@ -1,12 +1,12 @@
-# The workflow.md Format
+# The WORKFLOW.md Format
 
 A structured Markdown document that gives LLMs context about how your team works — analogous to `CLAUDE.md` for code conventions or `DESIGN.md` for design systems.
 
 ---
 
-## What is workflow.md?
+## What is WORKFLOW.md?
 
-`workflow.md` is a **multi-actor contract**: a structured document that specifies, for each step in a workflow, who is eligible to perform it (`actor`), what inputs it requires, what outputs it produces, and what happens next. It is designed for teams where human and AI agents work together — the typed outputs of one step become the required inputs of the next.
+`WORKFLOW.md` is a **multi-actor contract**: a structured document that specifies, for each step in a workflow, who is eligible to perform it (`actor`), what inputs it requires, what outputs it produces, and what happens next. It is designed for teams where human and AI work together — the typed outputs of one step become the required inputs of the next.
 
 Any worker reading a workflow file — human or agent — can immediately identify:
 - Which steps they are eligible to perform (`actor: human | agent | either`)
@@ -22,14 +22,14 @@ A workspace is split into two tiers to avoid bloating any single LLM context:
 
 | File | Size | Purpose |
 |------|------|---------|
-| `workflow.md` (root) | ~200 tokens | Manifest/index. Always load first. |
+| `WORKFLOW.md` (root) | ~200 tokens | Manifest/index. Always load first. |
 | `workflows/*.md` | 400–2,000 tokens each | Full detail per workflow. Load only what's relevant. |
 
 The manifest contains a **Load Instructions** section that tells the LLM exactly what to do.
 
 ---
 
-## Manifest format (`workflow.md`)
+## Manifest format (`WORKFLOW.md`)
 
 ```markdown
 ---
@@ -77,7 +77,7 @@ workspace:
 
 ## Workflow file format (`workflows/*.md`)
 
-Each workflow file: YAML frontmatter + conventions section + one YAML block per phase.
+Each workflow file: YAML frontmatter + conventions section + a single `## Steps` YAML block containing all steps for that workflow.
 
 ```markdown
 ---
@@ -89,6 +89,8 @@ exported: 2026-05-08T10:00:00Z
 ---
 
 # Workflow: Discovery & Requirements
+
+See `WORKFLOW.md` in the project root for the full workspace manifest.
 
 ## Conventions
 
@@ -102,14 +104,12 @@ exported: 2026-05-08T10:00:00Z
 
 ---
 
-## Phase: Discovery
-
-Synthesize user interviews and analytics into product insights.
+## Steps
 
 ```yaml
-phase:
-  id: discovery
-  name: Discovery
+workflow:
+  id: discovery-requirements
+  name: Discovery & Requirements
   steps:
     - id: research-synthesis
       name: User Research Synthesis
@@ -120,7 +120,7 @@ phase:
       outputs:
         - "Insight brief"
         - "User journey map"
-      agents:
+      ai:
         - name: Claude Sonnet
           model: claude-sonnet-4-6
           skills: [summarize, extract-themes]
@@ -132,8 +132,31 @@ phase:
           alternatives: [Confluence, Miro]
       actor: either
       enforcement: required
+    - id: prd-drafting
+      name: PRD Drafting
+      description: Draft product requirements with Claude assistance.
+      inputs:
+        - "Insight brief"
+        - "User journey map"
+      outputs:
+        - "PRD"
+        - "Acceptance criteria"
+      ai:
+        - name: Claude Sonnet
+          model: claude-sonnet-4-6
+          skills: [write, structure, critique]
+          harness: claude-code
+      tools:
+        - name: Linear
+          type: saas
+          required: true
+          alternatives: [Jira, "GitHub Issues"]
+      actor: agent
+      enforcement: required
 ``
 ```
+
+Steps are flat — there is no phase grouping layer. The outputs of one step (e.g. `Insight brief`) become the inputs of the next, forming the chain.
 
 ---
 
@@ -149,10 +172,10 @@ phase:
 | `actor` | enum | — | `human` \| `agent` \| `either` — who is eligible to perform this step |
 | `enforcement` | enum | — | `required` \| `recommended` \| `optional` |
 | `notes` | string | 300 chars | Caveats, constraints, edge cases |
-| `agents[].name` | string | 60 chars | Agent display name |
-| `agents[].model` | string | — | Model ID, e.g. `claude-sonnet-4-6` |
-| `agents[].skills` | string[] | — | Skills the agent uses at this step |
-| `agents[].harness` | string | — | e.g. `claude-code`, `langchain`, `custom` |
+| `ai[].name` | string | 60 chars | Model or AI participant display name |
+| `ai[].model` | string | — | Model ID, e.g. `claude-sonnet-4-6` |
+| `ai[].skills` | string[] | — | Skills invoked at this step |
+| `ai[].harness` | string | — | Runtime — e.g. `claude-code`, `langchain`, `custom` |
 | `tools[].name` | string | 60 chars | Tool name |
 | `tools[].type` | enum | — | `saas` \| `ai-tool` \| `cli` \| `sdk` \| `ide` \| `local-config` |
 | `tools[].required` | boolean | — | Required vs. optional |
@@ -187,10 +210,10 @@ Add to your `CLAUDE.md` or system prompt:
 ```
 ## Workflow context
 
-A `workflow.md` file exists at the project root. It is the manifest for this team's
+A `WORKFLOW.md` file exists at the project root. It is the manifest for this team's
 product workflow. When starting any work session:
 
-1. Read `workflow.md` to understand what workflow files exist.
+1. Read `WORKFLOW.md` to understand what workflow files exist.
 2. Identify which workflow(s) are relevant to the current task based on descriptions and tags.
 3. Read only those workflow files from the `workflows/` directory.
 4. Only perform steps where `actor` is `agent` or `either`. Steps marked `actor: human`
@@ -199,14 +222,14 @@ product workflow. When starting any work session:
    inputs for downstream steps — do not skip producing them.
 6. Follow enforcement levels: complete `required` steps, use judgment on `recommended`,
    skip `optional` unless specifically helpful.
-7. Prefer the listed tools and agents unless there is a documented reason to deviate.
+7. Prefer the listed `ai:` and `tools:` entries unless there is a documented reason to deviate.
 ```
 
 ---
 
 ## Install the skill
 
-The Flowz skill lets you build a `workflow.md` conversationally inside Claude Code:
+The Flowz skill lets you build a `WORKFLOW.md` conversationally inside Claude Code:
 
 ```bash
 npx flowz-skill
@@ -220,6 +243,6 @@ See [`skill/README.md`](../skill/README.md) for details.
 
 ## See also
 
-- [Flowz canvas](https://lets-flowz.vercel.app/canvas) — visual editor for workflow.md
+- [Flowz canvas](https://lets-flowz.vercel.app/canvas) — visual editor for WORKFLOW.md
 - [Templates](https://lets-flowz.vercel.app/templates) — starter workspaces
 - [skill/SKILL.md](../skill/SKILL.md) — the Claude Code skill definition

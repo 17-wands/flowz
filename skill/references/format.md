@@ -1,10 +1,10 @@
-# workflow.md Format Reference
+# WORKFLOW.md Format Reference
 
 ## Two-tier structure
 
 ```
 your-project/
-  workflow.md              ← manifest index (~200 tokens)
+  WORKFLOW.md              ← manifest index (~200 tokens)
   workflows/
     discovery.md           ← one file per workflow (~400-800 tokens each)
     development.md
@@ -15,7 +15,7 @@ Agents read the manifest first, then load only the workflow files relevant to th
 
 ---
 
-## `workflow.md` — Manifest
+## `WORKFLOW.md` — Manifest
 
 ```markdown
 ---
@@ -69,7 +69,7 @@ exported: {ISO timestamp}
 # Workflow: {workflow name}
 
 {one paragraph description}
-See `workflow.md` in the project root for the full workspace manifest.
+See `WORKFLOW.md` in the project root for the full workspace manifest.
 
 ## Conventions
 
@@ -119,7 +119,7 @@ workflow:
 |-------|-------|
 | `description` | ≤ 200 chars |
 | `notes` | ≤ 300 chars |
-| Tool/agent names | ≤ 60 chars |
+| Tool/AI names | ≤ 60 chars |
 | Inputs/outputs per step | ≤ 8 items, ≤ 80 chars each |
 | Tool alternatives | ≤ 4 |
 

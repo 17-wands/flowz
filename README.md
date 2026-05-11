@@ -2,22 +2,22 @@
 
 **A multi-actor contract format for human and AI teams — and the tools to author it.**
 
-Flowz defines `workflow.md`: a structured document that specifies, for each step in a workflow, who is eligible to perform it (`actor: human | agent | either`), what inputs it requires, what outputs it produces, and what enforcement level applies. The typed outputs of one step become the required inputs of the next — making it a contract between workers, not just documentation about them.
+Flowz defines `WORKFLOW.md`: a structured document that specifies, for each step in a workflow, who is eligible to perform it (`actor: human | agent | either`), what inputs it requires, what outputs it produces, and what enforcement level applies. The typed outputs of one step become the required inputs of the next — making it a contract between workers, not just documentation about them.
 
-Any worker reading a workflow file — human or AI agent — can immediately identify which steps they are eligible to perform, what must exist before they start, and what they must produce before the next step can begin.
+Any worker reading a workflow file — human or AI — can immediately identify which steps they are eligible to perform, what must exist before they start, and what they must produce before the next step can begin.
 
 ---
 
-## The workflow.md format
+## The WORKFLOW.md format
 
 A workspace is split into two tiers to keep LLM context lean:
 
 | File | Size | Purpose |
 |------|------|---------|
-| `workflow.md` (root) | ~200 tokens | Manifest/index. Always load first. |
+| `WORKFLOW.md` (root) | ~200 tokens | Manifest/index. Always load first. |
 | `workflows/*.md` | 400–2,000 tokens each | Full detail per workflow. Load only what's relevant. |
 
-Each workflow file contains phases, and each phase contains steps:
+Each workflow file contains a flat list of steps:
 
 ```yaml
 - id: research-synthesis
@@ -31,7 +31,7 @@ Each workflow file contains phases, and each phase contains steps:
   outputs:
     - "Insight brief"
     - "User journey map"
-  agents:
+  ai:
     - name: Claude Sonnet
       model: claude-sonnet-4-6
       skills: [summarize, extract-themes]
@@ -45,15 +45,15 @@ Each workflow file contains phases, and each phase contains steps:
 
 The `actor` field is what distinguishes this from a documentation format. Steps marked `actor: human` must not be executed autonomously by an agent. Steps marked `actor: agent` are fully delegatable. `actor: either` leaves it to the team's discretion.
 
-Full format specification: [`docs/workflow-md.md`](docs/workflow-md.md) or `lets-flowz.vercel.app/workflow_md`.
+Full format specification: [`docs/workflow-md.md`](docs/workflow-md.md) or [lets-flowz.vercel.app/workflow_md](https://lets-flowz.vercel.app/workflow_md).
 
 ---
 
-## Three ways to author workflow.md
+## Three ways to author WORKFLOW.md
 
 ### 1. Visual canvas (this app)
 
-The Flowz web app provides a node graph editor for building workflow files. Phases are grouping nodes; steps are cards within them. The right panel edits all fields including `actor`, `enforcement`, inputs, outputs, agents, and tools. Export generates `workflow.md` + `workflows/*.md` directly.
+The Flowz web app provides a node graph editor for building workflow files. Steps are cards on the canvas; the right panel edits all fields including `actor`, `enforcement`, inputs, outputs, `ai`, and tools. Export generates `WORKFLOW.md` + `workflows/*.md` directly.
 
 ```bash
 npm install
@@ -63,7 +63,7 @@ npm run dev
 
 ### 2. Claude Code skill
 
-Install the Flowz skill into any project and build `workflow.md` conversationally:
+Install the Flowz skill into any project and build `WORKFLOW.md` conversationally:
 
 ```bash
 npx flowz-skill
@@ -79,17 +79,17 @@ The format is plain Markdown with YAML code blocks — no tooling required. Use 
 
 ---
 
-## Using workflow.md with LLMs
+## Using WORKFLOW.md with LLMs
 
 Add this to your project's `CLAUDE.md` or system prompt:
 
 ```markdown
 ## Workflow context
 
-A `workflow.md` file exists at the project root. It is the manifest for this team's
+A `WORKFLOW.md` file exists at the project root. It is the manifest for this team's
 product workflow. When starting any work session:
 
-1. Read `workflow.md` to understand what workflow files exist.
+1. Read `WORKFLOW.md` to understand what workflow files exist.
 2. Identify which workflow(s) are relevant to the current task based on descriptions and tags.
 3. Read only those workflow files from the `workflows/` directory.
 4. Only perform steps where `actor` is `agent` or `either`. Steps marked `actor: human`
@@ -98,7 +98,7 @@ product workflow. When starting any work session:
    inputs for downstream steps — do not skip producing them.
 6. Follow enforcement levels: complete `required` steps, use judgment on `recommended`,
    skip `optional` unless specifically helpful.
-7. Prefer the listed tools and agents unless there is a documented reason to deviate.
+7. Prefer the listed `ai:` and `tools:` entries unless there is a documented reason to deviate.
 ```
 
 The manifest's built-in Load Instructions section includes this text automatically in every Flowz export.
@@ -107,8 +107,8 @@ The manifest's built-in Load Instructions section includes this text automatical
 
 ## Intended uses
 
-- **Document your team's AI-assisted workflows** — capture which steps humans own, which agents can handle, what flows between them
-- **Onboard agents to your process** — drop `workflow.md` into a project root and agents immediately understand the team's process, tool preferences, and handoff boundaries
+- **Document your team's AI-assisted workflows** — capture which steps humans own, which AI can handle, what flows between them
+- **Onboard agents to your process** — drop `WORKFLOW.md` into a project root and agents immediately understand the team's process, tool preferences, and handoff boundaries
 - **Enforce actor boundaries** — use `actor: human` to mark steps that must not be delegated (sign-off gates, judgment calls, stakeholder reviews)
 - **Build shared process libraries** — version-control your team's workflow definitions alongside the code they govern
 - **Integrate with multi-agent pipelines** — the typed `inputs`/`outputs` structure maps naturally to agent handoff protocols
@@ -127,15 +127,15 @@ flowz/
       workflow_md/page.tsx  # Format spec documentation
     components/canvas/      # React Flow nodes, edges, panels
     lib/
-      store.ts              # Zustand state (workspace, workflows, phases, steps)
-      export.ts             # Serialize to workflow.md + JSON
+      store.ts              # Zustand state (workspace, workflows, steps)
+      export.ts             # Serialize to WORKFLOW.md + JSON
       types.ts              # TypeScript interfaces + token estimation
       templates/            # Built-in starter workspaces
   skill/
     SKILL.md                # Claude Code skill definition
     README.md               # Skill installation guide
     bin/install.js          # npx flowz-skill installer
-    examples/               # Sample workflow.md output files
+    examples/               # Sample WORKFLOW.md output files
   docs/
     workflow-md.md          # Format specification (repo-readable)
 ```
@@ -183,7 +183,7 @@ Please open an issue before starting significant work.
 
 Apache 2.0. See [LICENSE](LICENSE).
 
-The `workflow.md` format itself is an open specification — implementations, tooling, and parsers are encouraged without restriction.
+The `WORKFLOW.md` format itself is an open specification — implementations, tooling, and parsers are encouraged without restriction.
 
 ---
 
