@@ -59,7 +59,7 @@ export function ExportModal() {
   function downloadBundle() {
     const bundle = exportWorkspaceBundle(workspace)
     const baseName = workspace.name.replace(/\s+/g, '-').toLowerCase()
-    downloadFile('workflow.md', bundle.manifest.content)
+    downloadFile('WORKFLOW.md', bundle.manifest.content)
     bundle.workflows.forEach((wf) => {
       setTimeout(() => downloadFile(wf.filename.replace('workflows/', `${baseName}-`), wf.content), 100)
     })
@@ -67,7 +67,7 @@ export function ExportModal() {
 
   const activeFilename =
     mode === 'manifest'
-      ? 'workflow.md'
+      ? 'WORKFLOW.md'
       : `workflows/${activeWorkflow?.name.replace(/\s+/g, '-').toLowerCase() ?? 'workflow'}.md`
 
   return (
@@ -118,7 +118,7 @@ export function ExportModal() {
             style={{ background: 'rgba(34,211,238,0.08)', border: '1px solid rgba(34,211,238,0.2)' }}
           >
             <p className="text-xs text-cyan-300 leading-relaxed">
-              <strong>Manifest export</strong> creates a lightweight <code className="font-mono">workflow.md</code> index that lists all {workspace.workflows.length} workflow{workspace.workflows.length !== 1 ? 's' : ''} with token counts and descriptions.
+              <strong>Manifest export</strong> creates a lightweight <code className="font-mono">WORKFLOW.md</code> index that lists all {workspace.workflows.length} workflow{workspace.workflows.length !== 1 ? 's' : ''} with token counts and descriptions.
               LLMs read the manifest first, then load only the workflows relevant to the current task.
               Use <strong>Download bundle</strong> to get all files at once.
             </p>
@@ -155,10 +155,10 @@ export function ExportModal() {
               <Button
                 variant="primary"
                 icon={<Download size={14} />}
-                onClick={() => downloadFile('workflow.md', content)}
+                onClick={() => downloadFile('WORKFLOW.md', content)}
                 className="flex-1 justify-center"
               >
-                Download workflow.md
+                Download WORKFLOW.md
               </Button>
               <Button
                 variant="secondary"
@@ -198,7 +198,7 @@ export function ExportModal() {
           style={{ background: 'rgba(124,92,255,0.08)', border: '1px solid rgba(124,92,255,0.15)' }}
         >
           <p className="text-xs text-violet-300 leading-relaxed">
-            Place <code className="font-mono">workflow.md</code> (the manifest) in your project root.
+            Place <code className="font-mono">WORKFLOW.md</code> (the manifest) in your project root.
             Place individual workflow files in <code className="font-mono">workflows/</code>.
             The manifest tells agents what exists; individual files provide the detail.
             Re-import the <code className="font-mono">.json</code> into Flowz to resume editing.

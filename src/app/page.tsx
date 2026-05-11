@@ -6,6 +6,16 @@ import { ArrowRight } from 'lucide-react'
 export default function HomePage() {
   return (
     <main className="min-h-screen bg-ink-950">
+      <nav className="sticky top-0 z-50 flex items-center justify-between px-6 py-3 border-b border-white/[0.06] bg-ink-900/80 backdrop-blur-sm">
+        <div className="text-sm font-semibold px-2 py-1 rounded-lg" style={{ background: 'rgba(124,92,255,0.15)', color: '#B4A2FF' }}>
+          Flowz
+        </div>
+        <div className="flex items-center gap-0.5">
+          <Link href="/canvas" className="text-xs text-slate-400 hover:text-mist-100 transition-colors px-3 py-1.5 rounded-lg hover:bg-white/[0.06]">Canvas</Link>
+          <Link href="/templates" className="text-xs text-slate-400 hover:text-mist-100 transition-colors px-3 py-1.5 rounded-lg hover:bg-white/[0.06]">Templates</Link>
+          <Link href="/workflow_md" className="text-xs font-mono text-slate-400 hover:text-violet-300 transition-colors px-3 py-1.5 rounded-lg hover:bg-white/[0.06]">WORKFLOW.md</Link>
+        </div>
+      </nav>
       <Hero />
       <FeatureGrid />
 
@@ -28,7 +38,7 @@ export default function HomePage() {
           </h2>
           <p className="text-slate-300 mb-8 leading-relaxed">
             Build your workflow in minutes. Export as{' '}
-            <code className="font-mono text-violet-300 text-sm">workflow.md</code> and give every
+            <code className="font-mono text-violet-300 text-sm">WORKFLOW.md</code> and give every
             agent on your team the context it needs.
           </p>
           <Link

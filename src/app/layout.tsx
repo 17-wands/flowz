@@ -16,7 +16,7 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: 'Flowz — LLM Workflow Modeler',
-  description: 'Visually model your team\'s AI-assisted product workflow. Export as workflow.md for LLM context.',
+  description: 'Visually model your team\'s AI-assisted product workflow. Export as WORKFLOW.md for LLM context.',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

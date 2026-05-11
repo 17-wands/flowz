@@ -43,7 +43,7 @@ export default function TemplatesPage() {
             Start from a template
           </h1>
           <p className="text-slate-300 text-base">
-            Each template is a <strong>workspace</strong> with multiple focused workflow files — ready to export as a manifest + individual <code className="font-mono text-violet-300">workflow.md</code> files.
+            Each template is a <strong>workspace</strong> with multiple focused workflow files — ready to export as <code className="font-mono text-violet-300">WORKFLOW.md</code> + individual <code className="font-mono text-violet-300">workflows/*.md</code> files.
           </p>
         </motion.div>
 
@@ -120,7 +120,7 @@ export default function TemplatesPage() {
         <section>
           <h2 className="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-1">Community resources</h2>
           <p className="text-xs text-slate-600 mb-4">
-            External workflow libraries — download and import as <code className="font-mono">workflow.md</code>
+            External workflow libraries — download and import as <code className="font-mono">WORKFLOW.md</code>
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {COMMUNITY_TEMPLATES.map((ct, i) => (

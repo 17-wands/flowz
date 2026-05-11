@@ -31,7 +31,7 @@ const FEATURES = [
   {
     icon: FileDown,
     color: '#22C55E',
-    title: 'Export as workflow.md',
+    title: 'Export as WORKFLOW.md',
     description: 'One-click export to a Markdown doc with embedded YAML. Drop it in your repo for LLM context.',
   },
   {

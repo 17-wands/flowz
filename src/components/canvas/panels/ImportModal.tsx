@@ -36,7 +36,7 @@ export function ImportModal({ open, onClose }: ImportModalProps) {
 
     const mdFiles = Array.from(files).filter((f) => f.name.endsWith('.md'))
     if (mdFiles.length === 0) {
-      setError('No .md files selected. Import only supports workflow.md files exported from Flowz.')
+      setError('No .md files selected. Import only supports WORKFLOW.md files exported from Flowz.')
       return
     }
 
@@ -178,8 +178,8 @@ export function ImportModal({ open, onClose }: ImportModalProps) {
             <div>
               <p className="text-xs text-slate-300 font-medium mb-1">Import tips</p>
               <ul className="text-xs text-slate-500 space-y-1">
-                <li>• Single <code className="font-mono">workflow.md</code> — adds a new workflow to your current workspace</li>
-                <li>• <code className="font-mono">workflow.md</code> + <code className="font-mono">workflows/*.md</code> — replaces workspace with full bundle</li>
+                <li>• Single <code className="font-mono">workflows/*.md</code> — adds a new workflow to your current workspace</li>
+                <li>• <code className="font-mono">WORKFLOW.md</code> + <code className="font-mono">workflows/*.md</code> — replaces workspace with full bundle</li>
                 <li>• See <a href="/workflow_md" className="text-violet-400 hover:text-violet-300">format spec</a> for the expected structure</li>
               </ul>
             </div>

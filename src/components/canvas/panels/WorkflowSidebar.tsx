@@ -134,7 +134,7 @@ export function WorkflowSidebar() {
 
       <div className="p-3 border-t border-white/[0.06]">
         <p className="text-[10px] text-slate-600 leading-relaxed">
-          Each workflow exports as its own <span className="font-mono">workflow.md</span> file.
+          Exports to <span className="font-mono">WORKFLOW.md</span> + <span className="font-mono">workflows/</span>
         </p>
       </div>
     </aside>

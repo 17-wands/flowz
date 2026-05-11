@@ -104,7 +104,7 @@ export default function WorkflowMdPage() {
 
           <Section id="what" title="What is workflow.md?">
             <p>
-              <InlineCode>workflow.md</InlineCode> is a <strong>multi-actor contract</strong>: a structured document that specifies, for each step in a workflow, who is eligible to perform it (<InlineCode>actor</InlineCode>), what inputs it requires, what outputs it produces, and what happens next. It is designed for teams where human and AI agents work together — the typed outputs of one step become the required inputs of the next.
+              <InlineCode>WORKFLOW.md</InlineCode> is a <strong>multi-actor contract</strong>: a structured document that specifies, for each step in a workflow, who is eligible to perform it (<InlineCode>actor</InlineCode>), what inputs it requires, what outputs it produces, and what happens next. It is designed for teams where human and AI agents work together — the typed outputs of one step become the required inputs of the next.
             </p>
             <p>
               Any worker reading a workflow file — human or agent — can immediately identify which steps they are eligible to perform, what artifacts must exist before they start, and what they must produce before the next step can begin.
@@ -121,7 +121,7 @@ export default function WorkflowMdPage() {
             <div className="grid grid-cols-2 gap-4">
               {[
                 {
-                  title: 'workflow.md (manifest)',
+                  title: 'WORKFLOW.md (manifest)',
                   sub: 'Project root · ~200 tokens',
                   desc: 'Lightweight index. Lists all workflow files with descriptions, tags, and token counts. Always load this first.',
                   color: '#7C5CFF',
@@ -129,7 +129,7 @@ export default function WorkflowMdPage() {
                 {
                   title: 'workflows/*.md',
                   sub: 'Per workflow · 400–2,000 tokens each',
-                  desc: 'Full detail for one focused area (e.g. discovery, deployment). Load only what&apos;s relevant to the current task.',
+                  desc: "Full detail for one focused area (e.g. discovery, deployment). Load only what's relevant to the current task.",
                   color: '#22D3EE',
                 },
               ].map((t) => (
@@ -149,8 +149,8 @@ export default function WorkflowMdPage() {
             </p>
           </Section>
 
-          <Section id="manifest" title="Manifest format (workflow.md)">
-            <p>The root <InlineCode>workflow.md</InlineCode> is a Markdown file with YAML frontmatter and a structured YAML code block:</p>
+          <Section id="manifest" title="Manifest format (WORKFLOW.md)">
+            <p>The root <InlineCode>WORKFLOW.md</InlineCode> is a Markdown file with YAML frontmatter and a structured YAML code block:</p>
             <Code>{`---
 name: Acme Engineering
 version: 1.0.0
@@ -369,10 +369,10 @@ workflow:
             </p>
             <Code>{`## Workflow context
 
-A \`workflow.md\` file exists at the project root. It is the manifest for this team's
+A \`WORKFLOW.md\` file exists at the project root. It is the manifest for this team's
 product workflow. When starting any work session:
 
-1. Read \`workflow.md\` to understand what workflow files exist.
+1. Read \`WORKFLOW.md\` to understand what workflow files exist.
 2. Identify which workflow(s) are relevant to the current task based on descriptions and tags.
 3. Read only those workflow files from the \`workflows/\` directory.
 4. Only perform steps where \`actor\` is \`agent\` or \`either\`. Steps marked \`actor: human\`
@@ -384,13 +384,13 @@ product workflow. When starting any work session:
 7. Prefer the listed tools and agents unless there is a documented reason to deviate.`}
             </Code>
             <Note>
-              The manifest&apos;s built-in Load Instructions section already contains this text — it is included in every Flowz export automatically.
+              The <InlineCode>WORKFLOW.md</InlineCode> manifest&apos;s built-in Load Instructions section already contains this text — it is included in every Flowz export automatically.
             </Note>
           </Section>
 
           <Section id="skill" title="Install the skill">
             <p>
-              The Flowz skill lets you build a <InlineCode>workflow.md</InlineCode> conversationally inside Claude Code — no visual editor needed.
+              The Flowz skill lets you build a <InlineCode>WORKFLOW.md</InlineCode> conversationally inside Claude Code — no visual editor needed.
             </p>
             <Code>{`# Install into your project
 npx flowz-skill
@@ -405,7 +405,7 @@ npx flowz-skill
 /flowz`}
             </Code>
             <p className="text-sm">
-              The skill guides you through defining your workflows, steps, agents, and tools via a structured conversation, then writes the resulting <InlineCode>workflow.md</InlineCode> (and <InlineCode>workflows/</InlineCode> files) directly to your project.
+              The skill guides you through defining your workflows, steps, agents, and tools via a structured conversation, then writes the resulting <InlineCode>WORKFLOW.md</InlineCode> (and <InlineCode>workflows/</InlineCode> files) directly to your project.
             </p>
             <p className="text-sm">
               The skill is part of the Flowz repository. See <InlineCode>skill/README.md</InlineCode> for source and contribution details.

@@ -75,7 +75,7 @@ export function exportWorkflowMarkdown(workflow: Workflow, workspace: Workspace)
   lines.push(
     'This document describes a focused workflow. Load it when working within this domain.'
   )
-  lines.push('See `workflow.md` in the project root for the full workspace manifest.')
+  lines.push('See `WORKFLOW.md` in the project root for the full workspace manifest.')
   lines.push('')
   lines.push(conventionsSection())
 
@@ -202,7 +202,7 @@ export function exportWorkspaceBundle(workspace: Workspace): WorkspaceExportBund
   const baseName = workspace.name.replace(/\s+/g, '-').toLowerCase()
   return {
     manifest: {
-      filename: 'workflow.md',
+      filename: 'WORKFLOW.md',
       content: exportManifest(workspace),
     },
     workflows: workspace.workflows.map((wf) => ({

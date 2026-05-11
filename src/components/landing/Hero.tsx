@@ -89,7 +89,7 @@ export function Hero() {
           className="text-lg text-slate-300 max-w-2xl mx-auto mb-10 leading-relaxed"
         >
           Visualize your product lifecycle as a node graph. Define agents, tools, and skills at each step.
-          Export as <code className="font-mono text-violet-300 text-sm">workflow.md</code> — context your AI tools can actually use.
+          Export as <code className="font-mono text-violet-300 text-sm">WORKFLOW.md</code> — context your AI tools can actually use.
         </motion.p>
 
         {/* CTAs */}
