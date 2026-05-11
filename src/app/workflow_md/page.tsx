@@ -36,7 +36,7 @@ function Note({ children }: { children: React.ReactNode }) {
 }
 
 const TOC = [
-  { id: 'what', label: 'What is workflow.md?' },
+  { id: 'what', label: 'What is WORKFLOW.md?' },
   { id: 'two-tier', label: 'Two-tier structure' },
   { id: 'manifest', label: 'Manifest format' },
   { id: 'workflow-file', label: 'Workflow file format' },
@@ -54,7 +54,7 @@ export default function WorkflowMdPage() {
           <div className="text-sm font-semibold px-2 py-1 rounded-lg" style={{ background: 'rgba(124,92,255,0.15)', color: '#B4A2FF' }}>Flowz</div>
         </Link>
         <span className="text-slate-500">·</span>
-        <span className="text-sm text-slate-300 font-medium">workflow.md format spec</span>
+        <span className="text-sm text-slate-300 font-medium">WORKFLOW.md format spec</span>
         <div className="flex-1" />
         <a
           href="https://github.com/17-wands/flowz/blob/main/docs/workflow-md.md"
@@ -95,14 +95,14 @@ export default function WorkflowMdPage() {
         <main className="flex-1 min-w-0">
           <div className="mb-12">
             <h1 className="text-4xl font-semibold tracking-tight mb-4" style={{ color: '#EEF1F7', letterSpacing: '-0.04em' }}>
-              The workflow.md format
+              The WORKFLOW.md format
             </h1>
             <p className="text-lg text-slate-300 leading-relaxed">
               A structured Markdown document that gives LLMs context about how your team works — analogous to <InlineCode>CLAUDE.md</InlineCode> for conventions or <InlineCode>DESIGN.md</InlineCode> for design systems.
             </p>
           </div>
 
-          <Section id="what" title="What is workflow.md?">
+          <Section id="what" title="What is WORKFLOW.md?">
             <p>
               <InlineCode>WORKFLOW.md</InlineCode> is a <strong>multi-actor contract</strong>: a structured document that specifies, for each step in a workflow, who is eligible to perform it (<InlineCode>actor</InlineCode>), what inputs it requires, what outputs it produces, and what happens next. It is designed for teams where human and AI agents work together — the typed outputs of one step become the required inputs of the next.
             </p>
@@ -245,7 +245,7 @@ workflow:
       outputs:
         - "Insight brief"
         - "User journey map"
-      agents:
+      ai:
         - name: Claude Sonnet
           model: claude-sonnet-4-6
           skills: [summarize, extract-themes]
@@ -269,7 +269,7 @@ workflow:
       outputs:
         - "PRD"
         - "Acceptance criteria"
-      agents:
+      ai:
         - name: Claude Sonnet
           model: claude-sonnet-4-6
           skills: [write, structure, critique]
@@ -308,10 +308,10 @@ workflow:
                     ['actor', 'enum', '—', 'human | agent | either — who is eligible to perform this step'],
                     ['enforcement', 'enum', '—', 'required | recommended | optional'],
                     ['notes', 'string', '300 chars', 'Additional context, caveats, or constraints'],
-                    ['agents[].name', 'string', '60 chars', 'Agent display name'],
-                    ['agents[].model', 'string', '—', 'Model ID, e.g. claude-sonnet-4-6'],
-                    ['agents[].skills', 'string[]', '—', 'Skill names the agent uses for this step'],
-                    ['agents[].harness', 'string', '—', 'e.g. claude-code, langchain, custom'],
+                    ['ai[].name', 'string', '60 chars', 'Model or AI participant display name'],
+                    ['ai[].model', 'string', '—', 'Model ID, e.g. claude-sonnet-4-6'],
+                    ['ai[].skills', 'string[]', '—', 'Skill names invoked at this step'],
+                    ['ai[].harness', 'string', '—', 'Runtime — e.g. claude-code, langchain, custom'],
                     ['tools[].name', 'string', '60 chars', 'Tool name'],
                     ['tools[].type', 'enum', '—', 'saas | ai-tool | cli | sdk | ide | local-config'],
                     ['tools[].required', 'boolean', '—', 'Whether the tool is required vs. optional'],

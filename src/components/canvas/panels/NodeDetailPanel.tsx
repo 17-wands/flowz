@@ -229,13 +229,13 @@ export function NodeDetailPanel() {
             <div>
               <div className="flex items-center justify-between mb-2">
                 <label className="text-xs font-medium text-slate-300 uppercase tracking-wider">
-                  Agents
+                  AI
                 </label>
                 <button
                   onClick={() =>
                     update({
-                      agents: [
-                        ...step.agents,
+                      ai: [
+                        ...step.ai,
                         { id: uid(), name: 'Claude Sonnet', model: 'claude-sonnet-4-6', skills: [], harness: 'claude-code' },
                       ],
                     })
@@ -246,20 +246,20 @@ export function NodeDetailPanel() {
                 </button>
               </div>
               <div className="space-y-2">
-                {step.agents.map((agent, ai) => (
+                {step.ai.map((agent, idx) => (
                   <AgentEditor
                     key={agent.id}
                     agent={agent}
                     onChange={(updates) => {
-                      const agents = [...step.agents]
-                      agents[ai] = { ...agent, ...updates }
-                      update({ agents })
+                      const aiList = [...step.ai]
+                      aiList[idx] = { ...agent, ...updates }
+                      update({ ai: aiList })
                     }}
-                    onRemove={() => update({ agents: step.agents.filter((_, i) => i !== ai) })}
+                    onRemove={() => update({ ai: step.ai.filter((_, i) => i !== idx) })}
                   />
                 ))}
-                {step.agents.length === 0 && (
-                  <p className="text-[11px] text-slate-600">No agents assigned</p>
+                {step.ai.length === 0 && (
+                  <p className="text-[11px] text-slate-600">No AI assigned</p>
                 )}
               </div>
             </div>

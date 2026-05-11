@@ -41,7 +41,7 @@ workflow:
       outputs:
         - "Insight brief"
         - "User journey map"
-      agents:
+      ai:
         - name: Claude Sonnet
           model: claude-sonnet-4-6
           skills: [summarize, extract-themes, cluster-insights]
@@ -67,7 +67,7 @@ workflow:
       outputs:
         - "Wireframes"
         - "Design spec"
-      agents: []
+      ai: []
       tools:
         - name: Figma
           type: saas
@@ -86,7 +86,7 @@ workflow:
       outputs:
         - "PRD"
         - "Acceptance criteria"
-      agents:
+      ai:
         - name: Claude Sonnet
           model: claude-sonnet-4-6
           skills: [write, structure, critique, generate-acceptance-criteria]
@@ -107,7 +107,7 @@ workflow:
         - "Acceptance criteria"
       outputs:
         - "Approved PRD"
-      agents:
+      ai:
         - name: Claude Sonnet
           model: claude-sonnet-4-6
           skills: [critique, suggest-gaps]

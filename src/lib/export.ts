@@ -11,8 +11,8 @@ function serializeStep(step: WorkflowStep) {
     description: step.description || undefined,
     inputs: step.inputs.length ? step.inputs : undefined,
     outputs: step.outputs.length ? step.outputs : undefined,
-    agents: step.agents.length
-      ? step.agents.map((a) => ({
+    ai: step.ai.length
+      ? step.ai.map((a) => ({
           name: a.name,
           model: a.model,
           skills: a.skills.length ? a.skills : undefined,
@@ -254,7 +254,7 @@ function parseSteps(rawSteps: Array<Record<string, unknown>>): WorkflowStep[] {
     description: String(s.description || ''),
     inputs: Array.isArray(s.inputs) ? (s.inputs as string[]) : [],
     outputs: Array.isArray(s.outputs) ? (s.outputs as string[]) : [],
-    agents: (Array.isArray(s.agents) ? s.agents : []).map((a: Record<string, unknown>) => ({
+    ai: (Array.isArray(s.ai) ? s.ai : []).map((a: Record<string, unknown>) => ({
       id: uid(),
       name: String(a.name || ''),
       model: String(a.model || ''),

@@ -26,7 +26,7 @@ export interface WorkflowStep {
   description: string      // ≤ 200 chars
   inputs: string[]         // ≤ 8 items, each ≤ 80 chars
   outputs: string[]        // ≤ 8 items, each ≤ 80 chars
-  agents: AgentRef[]
+  ai: AgentRef[]
   tools: ToolRef[]
   actor: Actor             // who is eligible to perform this step
   enforcement: Enforcement
@@ -115,7 +115,7 @@ export function estimateTokens(workflow: Workflow): number {
     chars += step.notes.length
     chars += step.inputs.reduce((s, v) => s + v.length + 4, 0)
     chars += step.outputs.reduce((s, v) => s + v.length + 4, 0)
-    chars += step.agents.reduce((s, a) => s + a.name.length + a.model.length + a.skills.join('').length + 30, 0)
+    chars += step.ai.reduce((s, a) => s + a.name.length + a.model.length + a.skills.join('').length + 30, 0)
     chars += step.tools.reduce((s, t) => s + t.name.length + t.type.length + t.alternatives.join('').length + 30, 0)
   }
 

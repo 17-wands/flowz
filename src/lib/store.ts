@@ -170,7 +170,7 @@ export const useFlowzStore = create<FlowzState>()(
           description: '',
           inputs: [],
           outputs: [],
-          agents: [],
+          ai: [],
           tools: [],
           actor: 'either',
           enforcement: 'optional',

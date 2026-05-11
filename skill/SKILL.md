@@ -56,12 +56,12 @@ For each step:
   - Actor: human / agent / either (who is eligible to perform this step?)
   - Inputs: what artifacts must exist before this step starts?
   - Outputs: what artifacts must this step produce for downstream steps?
-  - Agents: which AI agents / models / skills?
+  - AI: which models, harnesses, or skills are involved?
   - Tools: SaaS, CLI, IDE, SDK — required vs. optional? Any alternatives?
   - Enforcement: required / recommended / optional
 ```
 
-Inference rule: if the tech stack is visible, pre-fill agents and tools and ask for confirmation rather than starting from scratch.
+Inference rule: if the tech stack is visible, pre-fill the `ai:` and `tools:` fields and ask for confirmation rather than starting from scratch.
 
 ### Step 4 — Write files
 

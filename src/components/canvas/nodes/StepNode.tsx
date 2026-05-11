@@ -141,8 +141,8 @@ export const StepNode = memo(({ data, id, selected }: NodeProps) => {
         {/* Enforcement badge */}
         <div className="flex items-center gap-1.5 flex-wrap">
           <Badge label={step.enforcement} variant="enforcement" />
-          {step.agents.length > 0 && (
-            <Badge label={`${step.agents.length} agent${step.agents.length > 1 ? 's' : ''}`} color="#7C5CFF" />
+          {step.ai.length > 0 && (
+            <Badge label={`${step.ai.length} AI`} color="#7C5CFF" />
           )}
           {step.tools.length > 0 && (
             <Badge label={`${step.tools.length} tool${step.tools.length > 1 ? 's' : ''}`} color="#3B82F6" />

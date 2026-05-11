@@ -95,7 +95,7 @@ workflow:
       description: {description ≤200 chars}
       inputs: ["{artifact 1}", "{artifact 2}"]
       outputs: ["{artifact 1}", "{artifact 2}"]
-      agents:
+      ai:
         - name: {agent name}
           model: {model id}
           skills: [{skill1}, {skill2}]
